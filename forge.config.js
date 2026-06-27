@@ -4,6 +4,13 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    ignore: [
+      /^\/\.git/,
+      /^\/\.gitignore/,
+      /^\/forge\.config\.js/,
+      /^\/package-lock\.json/,
+      /^\/src\/input\.css/, // Tailwind source file
+    ],
   },
   rebuildConfig: {},
   makers: [
