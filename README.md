@@ -1,3 +1,5 @@
+![alt text](assets/image.png)
+
 <p align="center">
   <img src="https://img.shields.io/badge/Electron-42.5.0-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron">
   <img src="https://img.shields.io/badge/Tailwind_CSS-4.3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS">
@@ -5,31 +7,31 @@
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
 </p>
 
-# 📊 Chanalysis
 
-**Chanalysis** adalah aplikasi desktop untuk menganalisis riwayat chat WhatsApp secara visual. Cukup ekspor chat dari WhatsApp, unggah file `.txt`-nya, dan dapatkan insight mendalam tentang pola komunikasi — semua diproses **100% secara lokal** di perangkat Anda.
 
-> 🔒 **Privasi Terjamin** — Tidak ada data yang dikirim ke server manapun. Semua analisis dilakukan secara offline di dalam aplikasi.
+# Chanalysis
 
----
+Chanalysis adalah aplikasi desktop untuk menganalisis riwayat chat WhatsApp secara lokal. Anda dapat mengekspor chat dari WhatsApp dalam format `.txt` dan mengunggahnya ke aplikasi ini untuk melihat statistik dan visualisasi pola komunikasi secara offline.
 
-## ✨ Fitur Utama
-
-| Fitur | Deskripsi |
-|---|---|
-| 📈 **Dashboard Statistik** | Total pesan, hari teraktif, jam teramai, dan jumlah partisipan |
-| 🏆 **Insight Karakteristik** | Raja stiker/media, orang paling panjang lebar, dan paling suka share link |
-| 💬 **Analisis Bahasa & Perilaku** | Kata paling sering digunakan, emoji favorit, dan rata-rata waktu balas per orang |
-| 📊 **Grafik Interaktif** | Keaktifan 7 hari terakhir, frekuensi pesan harian, dan distribusi jam aktif |
-| 🔍 **Detail Per Partisipan** | Klik kartu partisipan untuk melihat statistik detail dalam modal bento grid |
-| 📅 **Filter Tanggal** | Analisis hanya pesan dari tanggal tertentu ke atas |
-| 🔄 **Sorting Fleksibel** | Urutkan partisipan berdasarkan jumlah pesan, waktu balas, atau nama |
-| 🌙 **Dark Mode** | Toggle tema gelap/terang sesuai preferensi |
-| 🖱️ **Drag & Drop** | Tarik dan lepas file langsung ke aplikasi |
+> **Privasi Data**: Semua proses analisis dilakukan sepenuhnya di perangkat Anda secara lokal. Tidak ada data yang dikirim ke server luar.
 
 ---
 
-## 📸 Cara Kerja
+## Fitur
+
+- **Dashboard Statistik**: Menampilkan total pesan, hari teraktif, jam teramai, dan jumlah partisipan.
+- **Analisis Karakteristik**: Mengetahui pengirim stiker/media terbanyak, rata-rata panjang pesan, dan jumlah tautan yang dibagikan.
+- **Analisis Bahasa & Perilaku**: Statistik kata yang sering digunakan, emoji terpopuler, dan rata-rata waktu respons.
+- **Grafik Interaktif**: Visualisasi tren keaktifan mingguan, frekuensi pesan harian, dan distribusi jam aktif.
+- **Detail Per Partisipan**: Klik kartu partisipan untuk melihat statistik detail dalam tampilan modal.
+- **Filter Tanggal**: Membatasi analisis pada rentang waktu tertentu.
+- **Pengurutan Fleksibel**: Urutkan partisipan berdasarkan jumlah pesan, waktu respons, atau nama.
+- **Tema Gelap & Terang**: Mendukung peralihan tema (Dark/Light mode).
+- **Drag & Drop**: Tarik dan lepas file `.txt` langsung ke area aplikasi.
+
+---
+
+## Cara Penggunaan
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────┐
@@ -38,22 +40,22 @@
 └──────────────┘     └──────────────┘     └──────────────┘
 ```
 
-1. **Buka** chat/grup WhatsApp di HP
-2. **Ekspor** chat via menu `⋮` → `Lainnya` → `Ekspor Chat` → **Tanpa Media**
-3. **Pindahkan** file `.txt` ke komputer
-4. **Buka** Chanalysis dan drag & drop file tersebut
-5. **Lihat** hasil analisis secara instan!
+1. Buka chat atau grup di WhatsApp pada perangkat seluler Anda.
+2. Ekspor chat melalui menu **Lainnya** > **Ekspor Chat** dan pilih **Tanpa Media**.
+3. Pindahkan file `.txt` hasil ekspor ke komputer Anda.
+4. Buka Chanalysis dan tarik-lepas (drag & drop) file tersebut ke dalam aplikasi.
+5. Hasil analisis akan langsung ditampilkan.
 
 ---
 
-## 🚀 Instalasi & Menjalankan
+## Instalasi dan Pengembangan
 
 ### Prasyarat
 
-- [Node.js](https://nodejs.org/) v18 atau lebih baru
-- npm (sudah termasuk dengan Node.js)
+- [Node.js](https://nodejs.org/) v18 atau versi lebih baru
+- npm (menyatu dengan instalasi Node.js)
 
-### Langkah-langkah
+### Cara Menjalankan
 
 ```bash
 # 1. Clone repositori
@@ -67,36 +69,38 @@ npm install
 npm start
 ```
 
-Aplikasi akan otomatis build Tailwind CSS dan membuka jendela Electron.
+Aplikasi akan melakukan kompilasi Tailwind CSS dan menjalankan proses Electron.
 
 ---
 
-## 📦 Build & Packaging
+## Build dan Rilis
+
+Untuk membuat paket aplikasi siap pakai:
 
 ```bash
-# Package aplikasi (tanpa installer)
+# Membuat paket aplikasi (tanpa installer)
 npm run package
 
-# Buat installer (dmg/exe/deb/rpm)
+# Membuat installer (dmg, exe, deb, atau rpm sesuai OS)
 npm run make
 ```
 
-Output akan berada di folder `out/`.
+File hasil build akan disimpan di direktori `out/`.
 
 ---
 
-## 🗂️ Struktur Proyek
+## Struktur Proyek
 
 ```
 chanalysis-app/
 ├── src/
-│   ├── index.js          # Electron main process
+│   ├── index.js          # Main process Electron
 │   ├── preload.js        # Preload script (context bridge)
 │   ├── index.html        # Halaman utama UI
 │   ├── renderer.js       # Logika frontend (parsing, chart, UI)
 │   ├── input.css         # Source Tailwind CSS
-│   ├── index.css         # Built CSS (auto-generated)
-│   └── vendor/           # Library lokal (Chart.js, Font Awesome)
+│   ├── index.css         # CSS hasil kompilasi
+│   └── vendor/           # Pustaka lokal (Chart.js, Font Awesome)
 ├── forge.config.js       # Konfigurasi Electron Forge
 ├── package.json
 └── README.md
@@ -104,19 +108,19 @@ chanalysis-app/
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **[Electron](https://www.electronjs.org/)** — Framework desktop cross-platform
+- **[Electron](https://www.electronjs.org/)** — Framework desktop lintas platform
 - **[Tailwind CSS v4](https://tailwindcss.com/)** — Utility-first CSS framework
-- **[Chart.js](https://www.chartjs.org/)** — Library grafik interaktif
-- **[Font Awesome](https://fontawesome.com/)** — Ikon UI
-- **[Electron Forge](https://www.electronforge.io/)** — Tooling untuk build & packaging
+- **[Chart.js](https://www.chartjs.org/)** — Pustaka grafik interaktif
+- **[Font Awesome](https://fontawesome.com/)** — Kumpulan ikon UI
+- **[Electron Forge](https://www.electronforge.io/)** — Tooling build dan packaging
 
 ---
 
-## 📄 Format Chat yang Didukung
+## Format Chat yang Didukung
 
-Chanalysis mendukung format ekspor chat WhatsApp standar:
+Aplikasi ini mendukung format ekspor chat WhatsApp standar berikut:
 
 ```
 [DD/MM/YY, HH.MM.SS] Nama Pengirim: Isi pesan
@@ -125,29 +129,28 @@ Chanalysis mendukung format ekspor chat WhatsApp standar:
 Contoh:
 ```
 [28/06/25, 14.30.15] Budi: Halo, apa kabar?
-[28/06/25, 14.31.02] Ani: Baik! Kamu gimana?
 ```
 
 ---
 
-## 🤝 Kontribusi
+## Kontribusi
 
-Kontribusi sangat diterima! Silakan buka **Issue** atau kirim **Pull Request**.
+Kontribusi dalam bentuk pelaporan bug, saran, maupun pull request sangat diapresiasi.
 
 1. Fork repositori ini
-2. Buat branch fitur (`git checkout -b fitur/fitur-baru`)
-3. Commit perubahan (`git commit -m 'Menambahkan fitur baru'`)
-4. Push ke branch (`git push origin fitur/fitur-baru`)
+2. Buat branch fitur baru (`git checkout -b feature/nama-fitur`)
+3. Lakukan commit perubahan (`git commit -m 'Menambahkan fitur XYZ'`)
+4. Push ke branch Anda (`git push origin feature/nama-fitur`)
 5. Buka Pull Request
 
 ---
 
-## 📝 Lisensi
+## Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
 ---
 
 <p align="center">
-  Dibuat dengan ❤️ oleh <a href="https://github.com/glantrox">glantrox</a>
+  Dikembangkan oleh <a href="https://github.com/glantrox">glantrox</a>
 </p>
