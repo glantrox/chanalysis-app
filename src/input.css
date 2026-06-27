@@ -1,0 +1,56 @@
+/* ── Chanalysis — Tailwind Source CSS ────────────────────────────────────── */
+/* This file is the Tailwind CSS input. Run the build script to generate    */
+/* the final index.css with all utilities resolved.                         */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+/* ── Custom Theme Config ─────────────────────────────────────────────────── */
+@theme {
+  --color-primary: #4f46e5;
+  --color-secondary: #e11d48;
+}
+
+/* ── Tailwind Source Paths (content scanning) ────────────────────────────── */
+@source "./index.html";
+@source "./renderer.js";
+
+/* ── Variant: Dark Mode via class ────────────────────────────────────────── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ── Base ────────────────────────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── macOS frameless window: allow clicks on interactive elements ─────────── */
+button, a, input, select, label, [onclick] {
+  -webkit-app-region: no-drag;
+}
+
+/* ── Fade-Up Entrance Animation ──────────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* ── Animation Delay Utilities ───────────────────────────────────────────── */
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-250 { animation-delay: 250ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }

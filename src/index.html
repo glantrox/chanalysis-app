@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:;">
+    <title>Analisis Frekuensi Chat</title>
+
+    <!-- Chart.js (local vendor copy) -->
+    <script src="vendor/chart.umd.js"></script>
+    <!-- Font Awesome Icons (local vendor copy) -->
+    <link href="vendor/fontawesome/css/all.min.css" rel="stylesheet">
+
+    <!-- Built Tailwind CSS + Custom Styles -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen p-4 md:p-8 pt-2">
+
+    <!-- Draggable title bar region (macOS hiddenInset) -->
+    <div class="fixed top-0 left-0 right-0 h-12 z-50" style="-webkit-app-region: drag;"></div>
+
+    <div class="max-w-6xl mx-auto space-y-6 mt-6">
+        <!-- Header -->
+        <div id="main-header" class="flex flex-col lg:flex-row justify-between items-start lg:items-center p-2 pl-20 gap-4 transition-all duration-500">
+            <div class="flex flex-col">
+                <h1 class="text-xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 tracking-tight"><i class="fa-solid fa-chart-simple text-indigo-500"></i> <span id="brand-text">Chanalysis</span></h1>
+                <p id="chat-subtitle" class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 hidden">Unggah file riwayat obrolan Anda</p>
+                <!-- Badges -->
+                <div id="participant-badges" class="flex flex-wrap gap-2 hidden mt-3">
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 w-full lg:w-auto mt-2 lg:mt-0">
+                <!-- Filter Tanggal -->
+                <div id="filterContainer" class="hidden flex items-center space-x-2">
+                    <label for="startDate" class="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">Sejak:</label>
+                    <input type="date" id="startDate" class="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-3 py-1.5 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                </div>
+
+                <!-- Dark Mode Toggle -->
+                <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors shrink-0">
+                    <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
+                    <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
+                </button>
+
+                <!-- Unggah File Button -->
+                <label id="header-upload-btn" class="hidden cursor-pointer flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-5 py-2 rounded-full font-medium text-sm transition-colors shrink-0 shadow-sm">
+                    <i class="fa-solid fa-upload"></i>
+                    <span id="fileNameDisplay">Analisis Baru</span>
+                    <input type="file" id="fileUnggah" accept=".txt" class="hidden" />
+                </label>
+            </div>
+        </div>
+
+        <!-- Upload Prompt / Placeholder -->
+        
+        <div id="upload-prompt" class="w-full mt-4 flex flex-col items-center animate-fade-up">
+            <h3 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 mb-3">Analisis Riwayat Obrolan</h3>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mb-10 text-center max-w-lg leading-relaxed">
+                Data Anda aman dan diproses 100% secara lokal di dalam browser. Tidak ada data yang dikirim ke server.
+            </p>
+
+            <!-- Dropzone Area -->
+            <div id="dropzone" class="w-full max-w-2xl bg-slate-50 dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-12 flex flex-col items-center justify-center transition-all duration-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:border-indigo-400 hover:shadow-lg relative group overflow-hidden cursor-pointer">
+                <input type="file" id="file-input-hidden" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" accept=".txt">
+                
+                <div class="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/50 rounded-full flex items-center justify-center mb-6 transition-transform duration-300 group-hover:-translate-y-2 group-hover:scale-110 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-indigo-500 dark:text-indigo-400"></i>
+                </div>
+                <h4 class="text-xl font-bold text-slate-700 dark:text-slate-200">Tarik dan lepas file chat di sini</h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 mb-6 font-medium">atau</p>
+                <button class="px-8 py-2.5 bg-indigo-600 text-white rounded-full font-bold shadow-md pointer-events-none transition-all group-hover:bg-indigo-700 group-hover:shadow-lg">Pilih File</button>
+                <div class="mt-6 flex gap-3">
+                    <span class="text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1.5 rounded-md pointer-events-none tracking-wide">Format: .TXT</span>
+                    <span class="text-xs font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-3 py-1.5 rounded-md pointer-events-none tracking-wide">Maks: 50 MB</span>
+                </div>
+                
+                <!-- Error Message -->
+                <div id="dropzone-error" class="hidden absolute top-4 flex items-center text-xs font-bold text-rose-600 bg-rose-100 dark:bg-rose-900/80 dark:text-rose-200 px-4 py-2 rounded-lg shadow-sm z-30 transition-all">
+                    <i class="fa-solid fa-circle-exclamation mr-2"></i> <span id="dropzone-error-text">Format tidak valid. Harap unggah file .txt.</span>
+                </div>
+            </div>
+
+            <!-- Pending State -->
+            <div id="pending-state" class="hidden w-full max-w-2xl flex flex-col gap-4">
+                <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500">
+                            <i class="fa-regular fa-file-lines text-2xl"></i>
+                        </div>
+                        <div>
+                            <h5 id="pending-file-name" class="text-sm font-bold text-slate-800 dark:text-slate-200">_chat.txt</h5>
+                            <p id="pending-file-size" class="text-xs font-medium text-slate-500 mt-0.5">2.4 MB</p>
+                        </div>
+                    </div>
+                    <button id="cancel-file-btn" class="w-8 h-8 rounded-full hover:bg-rose-50 dark:hover:bg-rose-900/30 text-slate-400 hover:text-rose-500 flex items-center justify-center transition-colors">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                <div class="flex justify-end mt-2">
+                    <button id="analyze-btn" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2 transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Analisis Chat Sekarang
+                    </button>
+                </div>
+            </div>
+
+            <!-- Guide Steps -->
+            <div class="mt-12 w-full max-w-4xl text-left border-t border-slate-200 dark:border-slate-800 pt-8">
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 text-center">CARA MENDAPATKAN FILE CHAT WHATSAPP</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Step 1 -->
+                    <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-100 dark:border-slate-700/50 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+                        <div class="absolute -right-3 -top-6 text-[100px] font-bold text-slate-300/70 dark:text-slate-700/60 select-none transition-transform group-hover:scale-110">1</div>
+                        <div class="relative z-10">
+                            <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4 shadow-sm">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Buka Obrolan</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Buka aplikasi WhatsApp di <b>HP Anda</b>. Masuk ke ruang chat atau grup yang ingin dianalisis.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-100 dark:border-slate-700/50 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+                        <div class="absolute -right-3 -top-6 text-[100px] font-bold text-slate-300/70 dark:text-slate-700/60 select-none transition-transform group-hover:scale-110">2</div>
+                        <div class="relative z-10">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 shadow-sm">
+                                <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Ekspor Chat</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Ketuk <b>titik tiga</b> (Android) atau <b>nama kontak</b> (iOS) di kanan atas. Pilih <b>Lainnya &gt; Ekspor Chat</b>. Pilih <b>Tanpa Media</b> agar file ringan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-100 dark:border-slate-700/50 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:-translate-y-1">
+                        <div class="absolute -right-3 -top-6 text-[100px] font-bold text-slate-300/70 dark:text-slate-700/60 select-none transition-transform group-hover:scale-110">3</div>
+                        <div class="relative z-10">
+                            <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-4 shadow-sm">
+                                <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                            </div>
+                            <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Unggah</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Pindahkan file <b>.txt</b> tersebut ke komputer Anda, lalu tarik dan lepas (drag & drop) ke dalam kotak di atas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="main-dashboard" class="hidden">
+            <!-- Statistik Utama -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="stats-container">
+                <!-- Populated dynamically by JavaScript -->
+            </div>
+
+            <!-- Insight Lanjutan -->
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-8 mb-4 px-2">Insight Karakteristik</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="insights-container">
+                <!-- Populated dynamically by JavaScript -->
+            </div>
+
+            <!-- Insight Bahasa & Perilaku -->
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-8 mb-4 px-2 gap-3">
+                <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Bahasa & Perilaku</h2>
+                <div class="flex items-center space-x-2">
+                    <label for="behavior-sort" class="text-sm text-slate-500 dark:text-slate-400 font-medium">Urutkan:</label>
+                    <select id="behavior-sort" class="text-sm border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                        <option value="default">Default</option>
+                        <option value="msg_desc">Jumlah Pesan (Banyak - Sedikit)</option>
+                        <option value="msg_asc">Jumlah Pesan (Sedikit - Banyak)</option>
+                        <option value="resp_fast">Waktu Balas (Tercepat)</option>
+                        <option value="resp_slow">Waktu Balas (Terlambat)</option>
+                        <option value="name_asc">Nama (A-Z)</option>
+                        <option value="name_desc">Nama (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="behavior-container">
+                <!-- Populated dynamically by JavaScript -->
+            </div>
+
+            <!-- Baris Grafik -->
+            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-8 mb-4 px-2">Grafik Aktivitas</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-up delay-500">
+                <!-- Grafik 7 Hari Terakhir -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 lg:col-span-2">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
+                        <i class="fa-solid fa-chart-line mr-2 text-emerald-500"></i> Keaktifan 7 Hari Terakhir
+                    </h2>
+                    <div class="relative h-72 w-full">
+                        <canvas id="last7DaysChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Grafik Harian -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
+                        <i class="fa-solid fa-calendar-day mr-2 text-blue-500"></i> Frekuensi Pesan Harian
+                    </h2>
+                    <div class="relative h-72 w-full">
+                        <canvas id="dailyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Grafik Jam -->
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
+                        <i class="fa-solid fa-clock mr-2 text-amber-500"></i> Waktu Paling Aktif (Jam)
+                    </h2>
+                    <div class="relative h-72 w-full">
+                        <canvas id="hourlyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Partisipan -->
+    <div id="participant-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-4 sm:p-6 transition-opacity duration-300 opacity-0">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeParticipantModal()"></div>
+        <div class="relative w-full max-w-5xl bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 border border-slate-200 dark:border-slate-700" id="participant-modal-content">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center mb-6 border-b border-slate-200 dark:border-slate-800 pb-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100" id="modal-title">Participant Name</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1" id="modal-subtitle">Detail Analisis Aktivitas</p>
+                </div>
+                <button onclick="closeParticipantModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Bento Grid Content -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5" id="modal-bento-grid">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Frontend Logic (extracted to external file) -->
+    <script src="renderer.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "name": "chanalysis-app",
+  "productName": "chanalysis-app",
+  "version": "1.0.0",
+  "description": "My Electron application description",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "css:build": "npx @tailwindcss/cli -i src/input.css -o src/index.css --minify",
+    "css:watch": "npx @tailwindcss/cli -i src/input.css -o src/index.css --watch",
+    "prestart": "npm run css:build",
+    "start": "electron-forge start",
+    "package": "npm run css:build && electron-forge package",
+    "make": "npm run css:build && electron-forge make",
+    "publish": "npm run css:build && electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "keywords": [],
+  "author": {
+    "name": "glantrox",
+    "email": "hamasazeezan@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.0",
+    "chart.js": "^4.5.1",
+    "electron-squirrel-startup": "^1.0.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.11.2",
+    "@electron-forge/maker-deb": "^7.11.2",
+    "@electron-forge/maker-rpm": "^7.11.2",
+    "@electron-forge/maker-squirrel": "^7.11.2",
+    "@electron-forge/maker-zip": "^7.11.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.11.2",
+    "@electron-forge/plugin-fuses": "^7.11.2",
+    "@electron/fuses": "^1.8.0",
+    "@tailwindcss/cli": "^4.3.1",
+    "electron": "42.5.0",
+    "tailwindcss": "^4.3.1"
+  }
+}
