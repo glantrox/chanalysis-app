@@ -21,34 +21,41 @@
 
     <div class="max-w-6xl mx-auto space-y-6 mt-6">
         <!-- Header -->
-        <div id="main-header" class="flex flex-col lg:flex-row justify-between items-start lg:items-center p-2 pl-20 gap-4 transition-all duration-500">
+        <div id="main-header" class="flex flex-col gap-4 p-2 transition-all duration-500">
+            <!-- Row 1: Top Bar -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 w-full">
             <div class="flex flex-col">
-                <h1 class="text-xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 tracking-tight"><i class="fa-solid fa-chart-simple text-indigo-500"></i> <span id="brand-text">Chanalysis</span></h1>
+                <h1 class="text-xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2 tracking-tight">
+                    <i class="fa-solid fa-chart-simple text-indigo-500"></i>
+                    <span id="brand-text">Chanalysis</span>
+                </h1>
                 <p id="chat-subtitle" class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1 hidden">Unggah file riwayat obrolan Anda</p>
-                <!-- Badges -->
-                <div id="participant-badges" class="flex flex-wrap gap-2 hidden mt-3">
+            </div>
+                
+                <div class="flex flex-wrap items-center gap-4 sm:gap-6 w-full md:w-auto md:justify-end">
+                    <!-- Filter Tanggal -->
+                    <div id="filterContainer" class="hidden flex items-center space-x-2">
+                        <label for="startDate" class="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">Sejak:</label>
+                        <input type="date" id="startDate" class="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-3 py-1.5 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-indigo-500 cursor-pointer">
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors shrink-0">
+                        <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
+                        <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
+                    </button>
+
+                    <!-- Unggah File Button -->
+                    <label id="header-upload-btn" class="hidden cursor-pointer flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-5 py-2 rounded-full font-medium text-sm transition-colors shrink-0 shadow-sm">
+                        <i class="fa-solid fa-upload"></i>
+                        <span id="fileNameDisplay">Analisis Baru</span>
+                        <input type="file" id="fileUnggah" accept=".txt" class="hidden" />
+                    </label>
                 </div>
             </div>
             
-            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 w-full lg:w-auto mt-2 lg:mt-0">
-                <!-- Filter Tanggal -->
-                <div id="filterContainer" class="hidden flex items-center space-x-2">
-                    <label for="startDate" class="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">Sejak:</label>
-                    <input type="date" id="startDate" class="text-sm border border-slate-200 dark:border-slate-600 rounded-full px-3 py-1.5 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-indigo-500 cursor-pointer">
-                </div>
-
-                <!-- Dark Mode Toggle -->
-                <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors shrink-0">
-                    <i id="theme-toggle-dark-icon" class="fa-solid fa-moon hidden"></i>
-                    <i id="theme-toggle-light-icon" class="fa-solid fa-sun hidden"></i>
-                </button>
-
-                <!-- Unggah File Button -->
-                <label id="header-upload-btn" class="hidden cursor-pointer flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-5 py-2 rounded-full font-medium text-sm transition-colors shrink-0 shadow-sm">
-                    <i class="fa-solid fa-upload"></i>
-                    <span id="fileNameDisplay">Analisis Baru</span>
-                    <input type="file" id="fileUnggah" accept=".txt" class="hidden" />
-                </label>
+            <!-- Row 2: Participant Badges -->
+            <div id="participant-badges" class="flex flex-wrap gap-2 hidden border-t border-slate-200/60 dark:border-slate-800 pt-3 w-full animate-fade-up">
             </div>
         </div>
 
@@ -149,67 +156,332 @@
 
 
         <div id="main-dashboard" class="hidden">
-            <!-- Statistik Utama -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="stats-container">
-                <!-- Populated dynamically by JavaScript -->
+            <!-- Tabs Navigation -->
+            <div class="border-b border-slate-200 dark:border-slate-800 mb-6 flex flex-wrap justify-between items-center gap-4">
+                <nav class="flex space-x-6" aria-label="Tabs">
+                    <button id="tab-overview" class="border-indigo-500 text-indigo-600 dark:text-indigo-400 whitespace-nowrap py-4 px-1 border-b-2 font-bold text-sm flex items-center gap-2 transition-all cursor-pointer">
+                        <i class="fa-solid fa-chart-pie"></i> Dashboard Utama
+                    </button>
+                    <button id="tab-system" class="border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-all cursor-pointer">
+                        <i class="fa-solid fa-gears"></i> Pesan Sistem & AI
+                    </button>
+                    <button id="tab-eda" class="border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm flex items-center gap-2 transition-all cursor-pointer">
+                        <i class="fa-solid fa-flask"></i> Analisis EDA & Kualitas Data
+                    </button>
+                </nav>
             </div>
 
-            <!-- Insight Lanjutan -->
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-8 mb-4 px-2">Insight Karakteristik</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="insights-container">
-                <!-- Populated dynamically by JavaScript -->
-            </div>
-
-            <!-- Insight Bahasa & Perilaku -->
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-8 mb-4 px-2 gap-3">
-                <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Bahasa & Perilaku</h2>
-                <div class="flex items-center space-x-2">
-                    <label for="behavior-sort" class="text-sm text-slate-500 dark:text-slate-400 font-medium">Urutkan:</label>
-                    <select id="behavior-sort" class="text-sm border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
-                        <option value="default">Default</option>
-                        <option value="msg_desc">Jumlah Pesan (Banyak - Sedikit)</option>
-                        <option value="msg_asc">Jumlah Pesan (Sedikit - Banyak)</option>
-                        <option value="resp_fast">Waktu Balas (Tercepat)</option>
-                        <option value="resp_slow">Waktu Balas (Terlambat)</option>
-                        <option value="name_asc">Nama (A-Z)</option>
-                        <option value="name_desc">Nama (Z-A)</option>
-                    </select>
+            <!-- Tab 1: Overview Content -->
+            <div id="overview-content" class="space-y-6">
+                <!-- Statistik Utama -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="stats-container">
+                    <!-- Populated dynamically by JavaScript -->
                 </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="behavior-container">
-                <!-- Populated dynamically by JavaScript -->
-            </div>
 
-            <!-- Baris Grafik -->
-            <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-8 mb-4 px-2">Grafik Aktivitas</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-up delay-500">
-                <!-- Grafik 7 Hari Terakhir -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 lg:col-span-2">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
-                        <i class="fa-solid fa-chart-line mr-2 text-emerald-500"></i> Keaktifan 7 Hari Terakhir
-                    </h2>
-                    <div class="relative h-72 w-full">
-                        <canvas id="last7DaysChart"></canvas>
+                <!-- Insight Lanjutan -->
+                <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-8 mb-4 px-2">Insight Karakteristik</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4" id="insights-container">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <!-- Anggota yang Telah Keluar -->
+                <div id="left-members-section" class="hidden mt-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm animate-fade-up">
+                    <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-door-open text-rose-500 animate-pulse"></i> Anggota yang Telah Keluar / Tidak Aktif Lagi
+                    </h3>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Daftar partisipan yang terdeteksi keluar secara eksplisit melalui log sistem atau terindikasi tidak aktif berdasarkan analisis durasi keheningan panjang.</p>
+                    <div id="left-members-list" class="flex flex-wrap gap-2">
+                        <!-- Populated dynamically by JS -->
                     </div>
                 </div>
 
-                <!-- Grafik Harian -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
-                        <i class="fa-solid fa-calendar-day mr-2 text-blue-500"></i> Frekuensi Pesan Harian
-                    </h2>
-                    <div class="relative h-72 w-full">
-                        <canvas id="dailyChart"></canvas>
+                <!-- Insight Bahasa & Perilaku -->
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-8 mb-4 px-2 gap-3">
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Bahasa & Perilaku</h2>
+                    <div class="flex items-center space-x-2">
+                        <label for="behavior-sort" class="text-sm text-slate-500 dark:text-slate-400 font-medium">Urutkan:</label>
+                        <select id="behavior-sort" class="text-sm border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                            <option value="default">Default</option>
+                            <option value="msg_desc">Jumlah Pesan (Banyak - Sedikit)</option>
+                            <option value="msg_asc">Jumlah Pesan (Sedikit - Banyak)</option>
+                            <option value="resp_fast">Waktu Balas (Tercepat)</option>
+                            <option value="resp_slow">Waktu Balas (Terlambat)</option>
+                            <option value="name_asc">Nama (A-Z)</option>
+                            <option value="name_desc">Nama (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="behavior-container">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <!-- Baris Grafik -->
+                <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mt-8 mb-4 px-2">Grafik Aktivitas</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-up delay-500">
+                    <!-- Grafik 7 Hari Terakhir -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 lg:col-span-2">
+                        <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
+                            <i class="fa-solid fa-chart-line mr-2 text-emerald-500"></i> Keaktifan 7 Hari Terakhir
+                        </h2>
+                        <div class="relative h-72 w-full">
+                            <canvas id="last7DaysChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Grafik Harian -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
+                            <i class="fa-solid fa-calendar-day mr-2 text-blue-500"></i> Frekuensi Pesan Harian
+                        </h2>
+                        <div class="relative h-72 w-full">
+                            <canvas id="dailyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Grafik Jam -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
+                            <i class="fa-solid fa-clock mr-2 text-amber-500"></i> Waktu Paling Aktif (Jam)
+                        </h2>
+                        <div class="relative h-72 w-full">
+                            <canvas id="hourlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: System Messages Content -->
+            <div id="system-content" class="hidden space-y-6">
+                <!-- Overview cards for system messages -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Card 1: Total System Messages -->
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Total Pesan Sistem</p>
+                            <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1" id="sys-total-count">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500 text-xl"><i class="fa-solid fa-circle-info"></i></div>
+                    </div>
+                    
+                    <!-- Card 2: Total Meta AI Messages -->
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Interaksi Meta AI</p>
+                            <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1" id="sys-ai-count">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-500 text-xl"><i class="fa-solid fa-brain"></i></div>
+                    </div>
+                    
+                    <!-- Card 3: Group Events -->
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Aktivitas Grup</p>
+                            <h3 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mt-1" id="sys-event-count">0</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-500 text-xl"><i class="fa-solid fa-users-gear"></i></div>
                     </div>
                 </div>
 
-                <!-- Grafik Jam -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center text-slate-800 dark:text-slate-100">
-                        <i class="fa-solid fa-clock mr-2 text-amber-500"></i> Waktu Paling Aktif (Jam)
+                <!-- Two column layout for System Messages -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left Column: Categories and Charts (Span 5) -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <!-- System Message Types Breakdown -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 mb-4">Breakdown Tipe Pesan Sistem</h3>
+                            <div class="space-y-4" id="sys-types-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: System Message Log (Span 7) -->
+                    <div class="lg:col-span-7 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">Log Pesan Sistem & AI</h3>
+                            <div class="flex gap-2 w-full sm:w-auto">
+                                <input type="text" id="sys-search" placeholder="Cari log..." class="text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all w-full sm:w-48">
+                                <select id="sys-filter-type" class="text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 cursor-pointer">
+                                    <option value="all">Semua</option>
+                                    <option value="system">Sistem & Keamanan</option>
+                                    <option value="ai">Meta AI</option>
+                                    <option value="event">Aktivitas Grup</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="sys-log-container" class="space-y-2 max-h-[500px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: EDA Content -->
+            <div id="eda-content" class="hidden space-y-8">
+                <!-- 1. Data Quality & Pre-processing Section -->
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 px-2 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-check text-indigo-500"></i> Laporan Kualitas & Pre-processing Data
                     </h2>
-                    <div class="relative h-72 w-full">
-                        <canvas id="hourlyChart"></canvas>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Quality Cards Grid (Span 7) -->
+                        <div class="lg:col-span-7 grid grid-cols-2 gap-4">
+                            <!-- Card 1: Format Terdeteksi -->
+                            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Format Log Chat</p>
+                                    <h4 class="text-lg font-bold text-slate-800 dark:text-slate-100 animate-fade-in" id="dq-format-name">-</h4>
+                                </div>
+                                <div class="mt-4">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400">
+                                        <i class="fa-solid fa-microchip mr-1"></i> Auto-detected
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- Card 2: Baris Multiline -->
+                            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Pesan Multiline Digabung</p>
+                                    <h4 class="text-2xl font-extrabold text-indigo-600" id="dq-multiline-count">0</h4>
+                                </div>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">Baris baru yang berhasil disatukan kembali ke pesan induk.</p>
+                            </div>
+                            <!-- Card 3: Pesan Sistem Terfilter -->
+                            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Pesan Sistem Terfilter</p>
+                                    <h4 class="text-2xl font-extrabold text-emerald-600" id="dq-system-count">0</h4>
+                                </div>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">Notifikasi otomatis WhatsApp yang dikeluarkan dari analisis.</p>
+                            </div>
+                            <!-- Card 4: Anomali & Duplikat -->
+                            <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider mb-1">Duplikasi & Anomali</p>
+                                    <h4 class="text-2xl font-extrabold text-rose-500" id="dq-anomaly-count">0</h4>
+                                </div>
+                                <p class="text-xs text-slate-400 dark:text-slate-500 mt-2">Pesan beruntun identik (spam) & baris rusak yang dibersihkan.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Explanation Block (Span 5) -->
+                        <div class="lg:col-span-5 bg-gradient-to-br from-indigo-50/50 to-slate-100/50 dark:from-slate-800/30 dark:to-slate-800/80 p-6 rounded-2xl border border-slate-200/60 dark:border-slate-700 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles text-indigo-500"></i> Upaya Pre-processing Data
+                                </h3>
+                                <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-400">
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-indigo-500 mt-0.5"></i>
+                                        <span><b>Stripping Zero-Width</b>: Menghapus karakter tak terlihat <code class="bg-slate-200/80 dark:bg-slate-700 px-1 rounded">\u200E</code> dari iOS.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-indigo-500 mt-0.5"></i>
+                                        <span><b>Penyelarasan Zona Waktu</b>: Mengonversi format waktu 12-jam (AM/PM) & 24-jam ke objek Date standar JS.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-indigo-500 mt-0.5"></i>
+                                        <span><b>Penggabungan Multiline</b>: Menggabungkan kembali potongan baris baru (new line) ke pesan asalnya.</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <i class="fa-solid fa-circle-check text-indigo-500 mt-0.5"></i>
+                                        <span><b>Pembersihan Stopwords</b>: Menyaring kata umum (di, ke, yang, dll.) untuk analisis frekuensi kata berkualitas tinggi.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex justify-between items-center text-xs text-slate-400">
+                                <span>Total baris diproses: <b class="text-slate-600 dark:text-slate-300 animate-fade-in" id="dq-total-lines">0</b></span>
+                                <span>Pesan valid: <b class="text-indigo-600 dark:text-indigo-400 animate-fade-in" id="dq-valid-messages">0</b></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Univariate Analysis Section -->
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 px-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-bar text-indigo-500"></i> Univariate Analysis: Distribusi & Karakteristik Tunggal
+                    </h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Message Length Stats (Span 5) -->
+                        <div class="lg:col-span-5 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Statistik Panjang Pesan (Kata)</h3>
+                                <div class="grid grid-cols-2 gap-4 mb-6">
+                                    <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Rata-rata (Mean)</p>
+                                        <p class="text-xl font-bold text-indigo-600" id="stat-mean-words">0</p>
+                                    </div>
+                                    <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Nilai Tengah (Median)</p>
+                                        <p class="text-xl font-bold text-indigo-600" id="stat-median-words">0</p>
+                                    </div>
+                                    <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Modus (Mode)</p>
+                                        <p class="text-xl font-bold text-indigo-600" id="stat-mode-words">0</p>
+                                    </div>
+                                    <div class="bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-center">
+                                        <p class="text-xs text-slate-400 dark:text-slate-500 font-medium">Outlier (&gt;Q3 + 1.5IQR)</p>
+                                        <p class="text-xl font-bold text-rose-505 text-rose-500" id="stat-outliers-count">0</p>
+                                    </div>
+                                </div>
+                                
+                                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">3 Pesan Outlier Terpanjang</h4>
+                                <div class="space-y-2" id="outliers-list">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Message Length Histogram (Span 7) -->
+                        <div class="lg:col-span-7 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Histogram Distribusi Panjang Pesan</h3>
+                            <div class="relative h-64 w-full">
+                                <canvas id="edaMsgLengthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Bivariate & Multivariate Analysis Section -->
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-4 px-2 flex items-center gap-2">
+                        <i class="fa-solid fa-diagram-project text-indigo-500"></i> Bivariate & Multivariate Analysis: Korelasi & Hubungan Antar Variabel
+                    </h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Stacked Bar: Message Types per Participant (Span 6) -->
+                        <div class="lg:col-span-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Komposisi Tipe Pesan per Partisipan</h3>
+                            <div class="relative h-72 w-full">
+                                <canvas id="edaMsgTypeCompositionChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Scatter Plot: Word Count vs Response Time (Span 6) -->
+                        <div class="lg:col-span-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4">Panjang Pesan vs. Waktu Respon</h3>
+                            <div class="relative h-72 w-full">
+                                <canvas id="edaScatterChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Correlation Matrix Heatmap (Span 6) -->
+                        <div class="lg:col-span-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2">Matriks Korelasi Chat Harian (Pearson)</h3>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Mengukur kekuatan korelasi linear aktivitas chat harian antar pengirim (-1.0 s/d +1.0).</p>
+                            <div class="flex-1 flex flex-col justify-center items-center w-full" id="eda-correlation-matrix-container">
+                                <!-- Populated dynamically by JS as a grid -->
+                            </div>
+                        </div>
+
+                        <!-- Interaction Matrix Heatmap (Span 6) -->
+                        <div class="lg:col-span-6 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col">
+                            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2">Matriks Interaksi (Frekuensi Balasan)</h3>
+                            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Jumlah balasan antar pengirim (balasan dihitung jika dalam rentang &lt; 1 jam).</p>
+                            <div class="flex-1 flex flex-col justify-center items-center w-full" id="eda-interaction-matrix-container">
+                                <!-- Populated dynamically by JS as a grid -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,7 +490,7 @@
 
     <!-- Modal Detail Partisipan -->
     <div id="participant-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-4 sm:p-6 transition-opacity duration-300 opacity-0">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeParticipantModal()"></div>
+        <div id="modal-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
         <div class="relative w-full max-w-5xl bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-2xl p-6 md:p-8 max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300 border border-slate-200 dark:border-slate-700" id="participant-modal-content">
             <!-- Header Modal -->
             <div class="flex justify-between items-center mb-6 border-b border-slate-200 dark:border-slate-800 pb-4">
@@ -226,13 +498,135 @@
                     <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100" id="modal-title">Participant Name</h2>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mt-1" id="modal-subtitle">Detail Analisis Aktivitas</p>
                 </div>
-                <button onclick="closeParticipantModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                <button id="modal-close-btn" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             
             <!-- Bento Grid Content -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-5" id="modal-bento-grid">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Modal Tabs (Riwayat Pesan vs Riwayat Telepon) -->
+            <div class="mt-8 border-t border-slate-200 dark:border-slate-800 pt-6">
+                <div class="border-b border-slate-200 dark:border-slate-800 mb-4">
+                    <nav class="-mb-px flex space-x-6" aria-label="Modal Tabs">
+                        <button id="modal-tab-chat" class="border-indigo-500 text-indigo-600 dark:text-indigo-400 whitespace-nowrap pb-3 border-b-2 font-bold text-sm flex items-center gap-2 transition-all cursor-pointer">
+                            <i class="fa-solid fa-comments"></i> Riwayat Pesan
+                        </button>
+                        <button id="modal-tab-call" class="border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 whitespace-nowrap pb-3 border-b-2 font-medium text-sm flex items-center gap-2 transition-all cursor-pointer">
+                            <i class="fa-solid fa-phone"></i> Riwayat Telepon
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Panel 1: Riwayat Pesan -->
+                <div id="modal-panel-chat" class="space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
+                        <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Daftar Pesan <span id="chat-history-count" class="text-xs font-normal text-slate-400 dark:text-slate-500">0 pesan</span>
+                        </h3>
+                        
+                        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                            <!-- Search Input -->
+                            <div class="relative flex-1 sm:flex-initial">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400"></i>
+                                <input type="text" id="modal-chat-search" placeholder="Cari pesan..." class="w-full sm:w-60 pl-9 pr-4 py-1.5 text-xs border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                            </div>
+                            
+                            <!-- Sort Selector -->
+                            <div class="flex items-center gap-2">
+                                <label for="modal-chat-sort" class="text-xs text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">Urutkan:</label>
+                                <select id="modal-chat-sort" class="text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                                    <option value="date_desc">Tanggal (Terbaru)</option>
+                                    <option value="date_asc">Tanggal (Terlama)</option>
+                                    <option value="words_desc">Kata (Terbanyak)</option>
+                                    <option value="words_asc">Kata (Terdikit)</option>
+                                    <option value="caps_desc">Paling Banyak Capslock</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Messages Scroll Area -->
+                    <div id="modal-chat-list" class="space-y-2 max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Panel 2: Riwayat Telepon -->
+                <div id="modal-panel-call" class="hidden space-y-4">
+                    <!-- Call Analysis Dashboard -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="modal-call-stats">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Call Log List -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                Log Telepon <span id="call-history-count" class="text-xs font-normal text-slate-400 dark:text-slate-500">0 panggilan</span>
+                            </h3>
+                            
+                            <div class="flex items-center gap-2">
+                                <label for="modal-call-sort" class="text-xs text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap">Urutkan:</label>
+                                <select id="modal-call-sort" class="text-xs border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all cursor-pointer">
+                                    <option value="date_desc">Tanggal (Terbaru)</option>
+                                    <option value="date_asc">Tanggal (Terlama)</option>
+                                    <option value="duration_desc">Durasi (Terlama → Tercepat)</option>
+                                    <option value="duration_asc">Durasi (Tercepat → Terlama)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="modal-call-list" class="space-y-2 max-h-80 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Semua Partisipan -->
+    <div id="all-participants-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-4 sm:p-6 transition-opacity duration-300 opacity-0">
+        <div id="participants-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div class="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 transform scale-95 transition-transform duration-300 border border-slate-200 dark:border-slate-700" id="participants-modal-content">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-150 dark:border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-indigo-500"></i> Semua Partisipan
+                </h3>
+                <button id="participants-close-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="max-h-80 overflow-y-auto space-y-2 pr-2" id="all-participants-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ranking Keaktifan -->
+    <div id="activity-ranking-modal" class="fixed inset-0 z-50 hidden flex-col items-center justify-center p-4 sm:p-6 transition-opacity duration-300 opacity-0">
+        <div id="activity-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div class="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 transform scale-95 transition-transform duration-300 border border-slate-200 dark:border-slate-700" id="activity-modal-content">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-150 dark:border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-indigo-500"></i> Peringkat Keaktifan Anggota
+                </h3>
+                <button id="activity-close-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <!-- Explanation Alert -->
+            <div class="p-3 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-800 dark:text-indigo-300 rounded-xl text-[11px] leading-relaxed mb-4 border border-indigo-100/50 dark:border-indigo-900/30">
+                <p class="font-semibold flex items-center gap-1.5"><i class="fa-solid fa-circle-info"></i> Metodologi Data Science Bebas Bias:</p>
+                <p class="mt-1">Skor keaktifan dihitung berdasarkan <strong>Volume Pesan & Kata</strong>, yang dinormalisasi dengan <strong>Masa Keanggotaan (Tenure)</strong> dan dibobot menggunakan <strong>Penyusutan Waktu Eksponensial (Time Decay)</strong>. Hal ini mencegah bias terhadap anggota baru atau anggota lama yang sudah tidak aktif lagi.</p>
+            </div>
+
+            <!-- Scrollable list of members ranked -->
+            <div class="max-h-80 overflow-y-auto space-y-2 pr-2 scrollbar-thin" id="activity-ranking-list">
                 <!-- Populated by JS -->
             </div>
         </div>
