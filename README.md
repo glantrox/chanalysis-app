@@ -1,4 +1,8 @@
-![alt text](assets/image.png)
+<img width="1440" height="900" alt="image" src="https://github.com/user-attachments/assets/140de3b3-e839-4f68-bae9-2d85499c7581" />
+<img width="330"  alt="image" src="https://github.com/user-attachments/assets/6c3a4866-3dcd-478d-853b-5aee31e08845" />
+<img width="330" alt="image" src="https://github.com/user-attachments/assets/63124e58-6714-4bc3-a37a-e7feeff46861" />
+<img width="330"  alt="image" src="https://github.com/user-attachments/assets/354872ad-83ed-432f-bd8b-d7f22c958e19" />
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/Electron-42.5.0-47848F?style=for-the-badge&logo=electron&logoColor=white" alt="Electron">
