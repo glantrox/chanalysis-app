@@ -167,16 +167,22 @@ document.addEventListener('DOMContentLoaded', () => {
       e.stopPropagation();
     }
 
+    // Trigger hidden file input on dropzone click
+    dropzone.addEventListener('click', () => {
+      if (fileInputHidden) fileInputHidden.click();
+    });
+
     ['dragenter', 'dragover'].forEach((eventName) => {
       dropzone.addEventListener(
         eventName,
         () => {
           dropzone.classList.add(
             'border-indigo-500',
-            'bg-indigo-50',
-            'dark:border-indigo-500',
-            'dark:bg-indigo-900/20'
+            'bg-indigo-50/50',
+            'dark:bg-indigo-955/30',
+            'border-solid'
           );
+          dropzone.classList.remove('border-dashed');
         },
         false
       );
@@ -188,10 +194,11 @@ document.addEventListener('DOMContentLoaded', () => {
         () => {
           dropzone.classList.remove(
             'border-indigo-500',
-            'bg-indigo-50',
-            'dark:border-indigo-500',
-            'dark:bg-indigo-900/20'
+            'bg-indigo-50/50',
+            'dark:bg-indigo-955/30',
+            'border-solid'
           );
+          dropzone.classList.add('border-dashed');
         },
         false
       );
@@ -223,24 +230,64 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzeBtn.addEventListener('click', () => {
       if (!selectedFile) return;
 
-      document.getElementById('upload-prompt').classList.add('hidden');
-      document.getElementById('main-dashboard').classList.remove('hidden');
-
+      const uploadPrompt = document.getElementById('upload-prompt');
+      const analysisLoading = document.getElementById('analysis-loading');
+      const loadingStepText = document.getElementById('loading-step-text');
+      const loadingProgressBar = document.getElementById('loading-progress-bar');
+      const mainDashboard = document.getElementById('main-dashboard');
       const header = document.getElementById('main-header');
-      if (header) {
-        header.classList.remove('p-2', 'bg-transparent');
-      }
-
       const headerBtn = document.getElementById('header-upload-btn');
-      if (headerBtn) headerBtn.classList.remove('hidden');
+      const filterContainer = document.getElementById('filterContainer');
+
+      // Show loading screen
+      if (uploadPrompt) uploadPrompt.classList.add('hidden');
+      if (analysisLoading) {
+        analysisLoading.classList.remove('hidden');
+        loadingProgressBar.style.width = '0%';
+        loadingStepText.textContent = 'Membaca file chat...';
+      }
 
       const reader = new FileReader();
       reader.onload = function (e) {
         const text = e.target.result;
         globalRawChat = text;
-        const filterContainer = document.getElementById('filterContainer');
-        if (filterContainer) filterContainer.classList.remove('hidden');
-        processChatData(text);
+
+        // Start a premium animated loading sequence
+        setTimeout(() => {
+          if (loadingProgressBar) loadingProgressBar.style.width = '35%';
+          if (loadingStepText) loadingStepText.textContent = 'Memilah baris pesan & mendeteksi pengirim...';
+
+          setTimeout(() => {
+            if (loadingProgressBar) loadingProgressBar.style.width = '70%';
+            if (loadingStepText) loadingStepText.textContent = 'Menghitung statistik frekuensi & waktu...';
+
+            setTimeout(() => {
+              if (loadingProgressBar) loadingProgressBar.style.width = '100%';
+              if (loadingStepText) loadingStepText.textContent = 'Mempersiapkan dasbor interaktif...';
+
+              setTimeout(() => {
+                // Hide loading screen and show dashboard
+                if (analysisLoading) analysisLoading.classList.add('hidden');
+                if (mainDashboard) mainDashboard.classList.remove('hidden');
+
+                const headerTabs = document.getElementById('header-tabs');
+                if (headerTabs) headerTabs.classList.remove('hidden');
+
+                if (header) {
+                  header.classList.remove('bg-transparent');
+                }
+                if (headerBtn) headerBtn.classList.remove('hidden');
+                if (filterContainer) filterContainer.classList.remove('hidden');
+
+                // Process data and render charts
+                processChatData(text);
+              }, 400); // final transition delay
+
+            }, 400); // step 3 delay
+
+          }, 450); // step 2 delay
+
+        }, 350); // step 1 delay
       };
       reader.readAsText(selectedFile);
     });
@@ -253,16 +300,61 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('fileUnggah').addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (!file) return;
+
+    const uploadPrompt = document.getElementById('upload-prompt');
+    const analysisLoading = document.getElementById('analysis-loading');
+    const loadingStepText = document.getElementById('loading-step-text');
+    const loadingProgressBar = document.getElementById('loading-progress-bar');
+    const mainDashboard = document.getElementById('main-dashboard');
+
     document.getElementById('fileNameDisplay').textContent = file.name;
+
+    // Show loading screen, hide previous states
+    if (uploadPrompt) uploadPrompt.classList.add('hidden');
+    if (mainDashboard) mainDashboard.classList.add('hidden');
+    if (analysisLoading) {
+      analysisLoading.classList.remove('hidden');
+      loadingProgressBar.style.width = '0%';
+      loadingStepText.textContent = 'Membaca file chat...';
+    }
+
     const reader = new FileReader();
     reader.onload = function (evt) {
       globalRawChat = evt.target.result;
-      filterContainer.classList.remove('hidden');
-      document.getElementById('upload-prompt').classList.add('hidden');
-      document.getElementById('main-dashboard').classList.remove('hidden');
       startDateInput.value = '';
-      processChatData(globalRawChat);
-      e.target.value = ''; // Reset input so same file can be uploaded again
+
+      // Start a premium animated loading sequence
+      setTimeout(() => {
+        if (loadingProgressBar) loadingProgressBar.style.width = '35%';
+        if (loadingStepText) loadingStepText.textContent = 'Memilah baris pesan & mendeteksi pengirim...';
+
+        setTimeout(() => {
+          if (loadingProgressBar) loadingProgressBar.style.width = '70%';
+          if (loadingStepText) loadingStepText.textContent = 'Menghitung statistik frekuensi & waktu...';
+
+          setTimeout(() => {
+            if (loadingProgressBar) loadingProgressBar.style.width = '100%';
+            if (loadingStepText) loadingStepText.textContent = 'Mempersiapkan dasbor interaktif...';
+
+            setTimeout(() => {
+              // Hide loading screen and show dashboard
+              if (analysisLoading) analysisLoading.classList.add('hidden');
+              if (mainDashboard) mainDashboard.classList.remove('hidden');
+              if (filterContainer) filterContainer.classList.remove('hidden');
+
+              const headerTabs = document.getElementById('header-tabs');
+              if (headerTabs) headerTabs.classList.remove('hidden');
+
+              // Process data and render charts
+              processChatData(globalRawChat);
+              e.target.value = ''; // Reset input so same file can be uploaded again
+            }, 400);
+
+          }, 400);
+
+        }, 450);
+
+      }, 350);
     };
     reader.readAsText(file);
   });
